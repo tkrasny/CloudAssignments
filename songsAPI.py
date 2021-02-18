@@ -67,11 +67,18 @@ def create_song(title: str):
 
 @app.delete("/songs{song_id}", status_code=200)
 def delete_song(song_id: int):
+    #TODO - what to return upon successful delete?
     global queue
     lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
     queue.remove(song)
 
+@app.delete("/songs", status_code=200)
+def delete_all():
+    global queue
+    global nsongs
+    nsongs = 0
+    queue = []
 
 def search_by_title(title):
     global queue
