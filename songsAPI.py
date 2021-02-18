@@ -15,7 +15,6 @@ def read_root():
 @app.get("/songs")
 def read_all_songs(title: Optional[str] = None):
     if title is not None:
-        print("Searching by title")
         lookupIndex = search_by_title(title)
         if lookupIndex is not -1:
             song = queue[lookupIndex]
@@ -93,7 +92,6 @@ def search_by_id(id):
     lookupIndex = next((lookupIndex for lookupIndex, song in enumerate(queue) if song["song_id"] == id), -1)
 
     if lookupIndex is -1:
-        print("SONG NOT FOUND")
         raise HTTPException(status_code=404, detail="Song not found")
     else:
         return lookupIndex
