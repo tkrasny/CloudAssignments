@@ -13,30 +13,31 @@ def read_root():
 
 
 @app.get("/songs")
-def read_song(song_id: Optional[int] = None, title: Optional[str] = None):
-    global queue
-
-    if song_id is None and title is None:
-        #Default to printing the entire queue if no parameters are provided
-        #TODO: Check on formatting here
-        return queue
-
-    #Search by title
+def read_all_songs(title: Optional[str] = None):
     if title is not None:
         print("Searching by title")
         lookupIndex = search_by_title(title)
+        if lookupIndex is not -1:
+            song = queue[lookupIndex]
+            return {"song_id": song["song_id"], "title": song["title"]}
+        else:
+            # No matches found for given title- return blank response
+            return {}
 
-    #Search by ID
-    if song_id is not None:
-        print("Searching by ID")
-        lookupIndex = search_by_id(song_id)
+    # No filtering done- return all songs
+    return queue
 
-
+@app.get("/songs{song_id}")
+def read_song(song_id: int):
+    lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
-    #TODO: Error check this
-
     return {"song_id": song["song_id"], "title": song["title"]}
 
+@app.get("/songs{song_id}/title")
+def read_song_title(song_id: int):
+    lookupIndex = search_by_id(song_id)
+    song = queue[lookupIndex]
+    return {"title": song["title"]}
 
 @app.put("/songs/{song_id}")
 def update_song(song_id: int, title: Optional[str] = None):
@@ -47,7 +48,6 @@ def update_song(song_id: int, title: Optional[str] = None):
         song["title"] = title
 
     return {"song_id": song["song_id"], "title": song["title"]}
-
 
 @app.post("/songs")
 def create_song(title: str):
@@ -67,7 +67,6 @@ def create_song(title: str):
 
 @app.delete("/songs{song_id}", status_code=200)
 def delete_song(song_id: int):
-    #TODO - what to return upon successful delete?
     global queue
     lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
@@ -83,15 +82,9 @@ def delete_all():
 def search_by_title(title):
     global queue
 
-    #lookup the title
     lookupIndex = next((lookupIndex for lookupIndex, song in enumerate(queue) if song["title"] == title), -1)
 
-    if lookupIndex is -1:
-        print("SONG NOT FOUND")
-        raise HTTPException(status_code=404, detail="Song not found")
-    else:
-        return lookupIndex
-
+    return lookupIndex
 
 def search_by_id(id):
     global queue
