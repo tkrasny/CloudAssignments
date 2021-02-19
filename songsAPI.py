@@ -16,7 +16,7 @@ def read_root():
 def read_all_songs(title: Optional[str] = None):
     returnList = []
 
-    if title is not None:
+    if title:
         lookupIndices = search_by_title(title)
         if len(lookupIndices) is not 0:
             for index in lookupIndices:

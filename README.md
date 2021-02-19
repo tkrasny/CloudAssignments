@@ -35,17 +35,38 @@ A description of each of the operations in the service, and their corresponding 
     * /songs                    : Deletes all songs
     * /songs/{song_id}          : Deletes a particular song from the queue
 
-A summary of your throughput measurements and a discussion of what they mean.  
+A summary of your throughput measurements and a discussion of what they mean.
+
+    I ran 3 trial groups, of 50, 500, and 1000 consequetive requests for the following 5 requests:
+    * GET (no songs populated)
+    * POST
+    * PUT
+    * GET (songs populated)
+    * DELETE
+
+    For each, the average 
+    
 
     Is the throughput higher or lower than what you expected?  
-    Lower. My initial expectations were set by the vague understanding of APIs I was operating with-
-    I pictured them as a lightning-fast interface between frontend and backend. While roughly 10 calls a
-    second is not slow in "real-world" time, this seems slow for the low-stress single-client simulation
-    I ran.
+        Lower. My initial expectations were set by the vague understanding of APIs I was operating with-
+        I pictured them as a lightning-fast interface between frontend and backend. While roughly 10 calls a
+        second is not slow in "real-world" time, this seems slow for the low-stress single-client simulation
+        I ran.
 
     What are the fundamental limits to the performance of your system?  
-    For my throughput testing, it's single-threaded- that is, each API call must wait for the previous to 
-    finish before the next is initiated. The performance could likely be boosted if the throughput was measured
-    over the span of multiple clients.
+        For my throughput testing, it's single-threaded- that is, each API call must wait for the previous to 
+        finish before the next is initiated. The performance could likely be boosted if the throughput was measured
+        over the span of multiple clients.
+
+        Additionally, the storage of data is quite poor for scalability (a locally-stored list of dictionaries).
+        This is not a particularly robust or safe way of storing data, as after each session it is lost.
 
     What does this mean if you want to run such a service at a large scale?
+        For the first issue mentioned, running the server over some sort of distributed system such as Condor would
+        swiftly and concisely address this issue. Granted, this might mean the server hosting the fastAPI might need an
+        upgrade as well, however this would remove this bottleneck.
+
+        Secondly, tieing the API to an actual backend database or similar would resolve the issue of data persistence
+        and scalability. Granted, adding an extra layer of communication could slow turnaround times slightly, but the benefit
+        of enhanced scalability likely outweighs this drawback.
+    
