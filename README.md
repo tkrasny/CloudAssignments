@@ -38,7 +38,14 @@ A description of each of the operations in the service, and their corresponding 
 A summary of your throughput measurements and a discussion of what they mean.  
 
     Is the throughput higher or lower than what you expected?  
+    Lower. My initial expectations were set by the vague understanding of APIs I was operating with-
+    I pictured them as a lightning-fast interface between frontend and backend. While roughly 10 calls a
+    second is not slow in "real-world" time, this seems slow for the low-stress single-client simulation
+    I ran.
 
     What are the fundamental limits to the performance of your system?  
+    For my throughput testing, it's single-threaded- that is, each API call must wait for the previous to 
+    finish before the next is initiated. The performance could likely be boosted if the throughput was measured
+    over the span of multiple clients.
 
     What does this mean if you want to run such a service at a large scale?
