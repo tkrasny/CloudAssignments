@@ -19,13 +19,21 @@ Anything special that we need to know about running and testing your code.
 
 A description of each of the operations in the service, and their corresponding URLs.
 
-    GET:
+    GET: Retrieve song(s) from the queue
+    * /                         : TODO: FILL THIS IN
+    * /songs                    : Lists all songs in the queue
+    * /songs/{song_id}          : Lists all attributes for a particular song
+    * /songs/{song_id}/title    : Returns a particular song's title
 
     POST:
+    * /songs                    : Creates a song with specified title
 
     PUT:
+    * /songs/{song_id}          : Updates song title to provided value
 
     DELETE:
+    * /songs                    : Deletes all songs
+    * /songs/{song_id}          : Deletes a particular song from the queue
 
 A summary of your throughput measurements and a discussion of what they mean.  
 

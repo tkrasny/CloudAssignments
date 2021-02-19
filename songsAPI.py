@@ -9,16 +9,20 @@ nsongs = 0
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    raise HTTPException(status_code=404, detail="Invalid request url")
 
 
 @app.get("/songs")
 def read_all_songs(title: Optional[str] = None):
+    returnList = []
+
     if title is not None:
-        lookupIndex = search_by_title(title)
-        if lookupIndex is not -1:
-            song = queue[lookupIndex]
-            return {"song_id": song["song_id"], "title": song["title"]}
+        lookupIndices = search_by_title(title)
+        if len(lookupIndices) is not 0:
+            for index in lookupIndices:
+                song = queue[index]
+                returnList.append(song)
+            return returnList
         else:
             # No matches found for given title- return blank response
             return {}
@@ -26,13 +30,13 @@ def read_all_songs(title: Optional[str] = None):
     # No filtering done- return all songs
     return queue
 
-@app.get("/songs{song_id}")
+@app.get("/songs/{song_id}")
 def read_song(song_id: int):
     lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
     return {"song_id": song["song_id"], "title": song["title"]}
 
-@app.get("/songs{song_id}/title")
+@app.get("/songs/{song_id}/title")
 def read_song_title(song_id: int):
     lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
@@ -64,7 +68,7 @@ def create_song(title: str):
     return {"song_id": song_id, "title": title}
 
 
-@app.delete("/songs{song_id}", status_code=200)
+@app.delete("/songs/{song_id}", status_code=200)
 def delete_song(song_id: int):
     global queue
     lookupIndex = search_by_id(song_id)
@@ -81,9 +85,9 @@ def delete_all():
 def search_by_title(title):
     global queue
 
-    lookupIndex = next((lookupIndex for lookupIndex, song in enumerate(queue) if song["title"] == title), -1)
+    lookupIndices = [lookupIndex for lookupIndex, song in enumerate(queue) if song["title"] == title]
 
-    return lookupIndex
+    return lookupIndices
 
 def search_by_id(id):
     global queue
