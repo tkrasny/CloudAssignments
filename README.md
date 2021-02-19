@@ -44,8 +44,12 @@ A summary of your throughput measurements and a discussion of what they mean.
     * GET (songs populated)
     * DELETE
 
-    For each, the average 
-    
+    For each, the average requests / second for the 3 trials was:
+    * GET: 9.87
+    * POST: 10.85
+    * PUT: 8.96019983968
+    * GET: 9.62308487317
+    * DELETE: 10.6277706749
 
     Is the throughput higher or lower than what you expected?  
         Lower. My initial expectations were set by the vague understanding of APIs I was operating with-
