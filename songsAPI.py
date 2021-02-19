@@ -7,6 +7,7 @@ app = FastAPI()
 queue = []
 nsongs = 0
 
+
 @app.get("/")
 def read_root():
     raise HTTPException(status_code=404, detail="Invalid request url")
@@ -30,17 +31,20 @@ def read_all_songs(title: Optional[str] = None):
     # No filtering done- return all songs
     return queue
 
+
 @app.get("/songs/{song_id}")
 def read_song(song_id: int):
     lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
     return {"song_id": song["song_id"], "title": song["title"]}
 
+
 @app.get("/songs/{song_id}/title")
 def read_song_title(song_id: int):
     lookupIndex = search_by_id(song_id)
     song = queue[lookupIndex]
     return {"title": song["title"]}
+
 
 @app.put("/songs/{song_id}")
 def update_song(song_id: int, title: Optional[str] = None):
@@ -51,6 +55,7 @@ def update_song(song_id: int, title: Optional[str] = None):
         song["title"] = title
 
     return {"song_id": song["song_id"], "title": song["title"]}
+
 
 @app.post("/songs")
 def create_song(title: str):
@@ -75,6 +80,7 @@ def delete_song(song_id: int):
     song = queue[lookupIndex]
     queue.remove(song)
 
+
 @app.delete("/songs", status_code=200)
 def delete_all():
     global queue
@@ -82,12 +88,14 @@ def delete_all():
     nsongs = 0
     queue = []
 
+
 def search_by_title(title):
     global queue
 
     lookupIndices = [lookupIndex for lookupIndex, song in enumerate(queue) if song["title"] == title]
 
     return lookupIndices
+
 
 def search_by_id(id):
     global queue
